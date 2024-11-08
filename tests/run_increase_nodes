@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+OUTPUT_DIR=output
+
+THREADS="1000 1000000 10000000"
+
+NODES="1 2 4 5 8 10 16 20 25 40 50 80 100 125 200 250 400 500 625 1000 1250 2000 2500 5000 10000 "
+
+LOOPS=$(seq 1 10)
+
+mkdir -p $OUTPUT_DIR
+
+OUTPUT_HEADER="build, mode, threads, launches, nodes, iterations, total, cuda_diff, graph_creation, total_launch, exec, results"
+
+OUTPUT_FILE="$OUTPUT_DIR/output_increase_nodes$1.txt"
+echo $OUTPUT_HEADER > $OUTPUT_FILE
+for T in $THREADS;
+do
+  for N in $NODES;
+  do
+    ITER=$(( 10000 / $N ))
+    for L in $LOOPS
+    do
+      ./iterapp -g -t $T -o $ITER -i 1 -k $N | tee -a $OUTPUT_FILE
+    done
+  done
+done

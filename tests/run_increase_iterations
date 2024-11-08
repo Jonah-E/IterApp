@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+OUTPUT_DIR=output
+
+THREADS="1000 1000000 10000000"
+
+LOOPS=$(seq 1 10)
+
+ITERATIONS=$(seq 1 1 40)
+
+mkdir -p $OUTPUT_DIR
+
+OUTPUT_HEADER="build, mode, threads, launches, nodes, iterations, total, cuda_diff, graph_creation, total_launch, exec, results"
+
+OUTPUT_FILE="$OUTPUT_DIR/output_kernels_increase_it$1.txt"
+echo $OUTPUT_HEADER > $OUTPUT_FILE
+for T in $THREADS;
+do
+  for I in $ITERATIONS;
+  do
+    for L in $LOOPS
+    do
+      ./iterapp -t $T -o $I -i 1 -k 100 | tee -a $OUTPUT_FILE
+    done
+  done
+done
+
+OUTPUT_FILE="$OUTPUT_DIR/output_graph_increase_it$1.txt"
+echo $OUTPUT_HEADER > $OUTPUT_FILE
+for T in $THREADS;
+do
+  for I in $ITERATIONS;
+  do
+    for L in $LOOPS
+    do
+      ./iterapp -g -t $T -o $I -i 1 -k 100 | tee -a $OUTPUT_FILE
+    done
+  done
+done

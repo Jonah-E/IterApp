@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+OUTPUT_FILE="basic.txt"
+date > $OUTPUT_FILE
+./iterapp -t 1000 -o 10 -i 1 -k 100 | tee -a $OUTPUT_FILE
+./iterapp -g -t 1000 -o 10 -i 1 -k 100 | tee -a $OUTPUT_FILE
+
